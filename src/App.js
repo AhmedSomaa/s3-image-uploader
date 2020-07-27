@@ -1,25 +1,26 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React from "react";
+import { uploadFile } from "react-s3";
+
+const config = {
+  bucketName: "image-uploader-app-bucket",
+  dirName: "media",
+  region: "us-east-2",
+  accessKeyId: process.env.ACCESS_KEY_ID,
+  secretAccessKey: process.env.SECRET_ACCESS_KEY,
+};
 
 function App() {
+  const handleFileUpload = async (file) => {
+    const stored = await uploadFile(file, config);
+    console.log(stored);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <input
+      type="file"
+      accept="image/*"
+      onChange={(e) => handleFileUpload(e.target.files[0])}
+    />
   );
 }
 
