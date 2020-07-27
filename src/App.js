@@ -12,9 +12,14 @@ const config = {
 
 function App() {
   const handleFileUpload = async (file) => {
-    const stored = await uploadFile(file, config);
-    console.log(stored);
+    try {
+      const stored = await uploadFile(file, config);
+      console.log(stored);
+    } catch (error) {
+      alert(error);
+    }
   };
+
   return (
     <input
       type="file"
