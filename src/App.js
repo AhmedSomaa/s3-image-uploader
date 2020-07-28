@@ -2,20 +2,30 @@ import "./App.css";
 import React from "react";
 import { uploadFile } from "react-s3";
 
+const {
+  REACT_APP_BUCKET_NAME,
+  REACT_APP_DIR_NAME,
+  REACT_APP_REGION,
+  REACT_APP_ACCESS_KEY_ID,
+  REACT_APP_SECRET_ACCESS_KEY,
+} = process.env;
+
 const config = {
-  bucketName: "image-uploader-app-bucket",
-  dirName: "media",
-  region: "us-east-2",
-  accessKeyId: process.env.ACCESS_KEY_ID,
-  secretAccessKey: process.env.SECRET_ACCESS_KEY,
+  bucketName: REACT_APP_BUCKET_NAME,
+  dirName: REACT_APP_DIR_NAME,
+  region: REACT_APP_REGION,
+  accessKeyId: REACT_APP_ACCESS_KEY_ID,
+  secretAccessKey: REACT_APP_SECRET_ACCESS_KEY,
 };
 
 function App() {
   const handleFileUpload = async (file) => {
     try {
       const stored = await uploadFile(file, config);
-      console.log(stored);
+      const { location } = stored;
+      console.log(location);
     } catch (error) {
+      console.log(error);
       alert(error);
     }
   };
