@@ -1,42 +1,25 @@
 import "./App.css";
 import React from "react";
+import config from "./config";
 import { uploadFile } from "react-s3";
+import Dropzone from "react-dropzone-uploader";
+import "react-dropzone-uploader/dist/styles.css";
 
-const {
-  REACT_APP_BUCKET_NAME,
-  REACT_APP_DIR_NAME,
-  REACT_APP_REGION,
-  REACT_APP_ACCESS_KEY_ID,
-  REACT_APP_SECRET_ACCESS_KEY,
-} = process.env;
-
-const config = {
-  bucketName: REACT_APP_BUCKET_NAME,
-  dirName: REACT_APP_DIR_NAME,
-  region: REACT_APP_REGION,
-  accessKeyId: REACT_APP_ACCESS_KEY_ID,
-  secretAccessKey: REACT_APP_SECRET_ACCESS_KEY,
-};
-
-function App() {
-  const handleFileUpload = async (file) => {
-    try {
-      const stored = await uploadFile(file, config);
-      const { location } = stored;
-      console.log(location);
-    } catch (error) {
-      console.log(error);
-      alert(error);
-    }
+function ImageUploader() {
+  const handleSubmit = async (files, allFiles) => {
+    files.forEach(async ({ file }) => {
+      try {
+        const { location } = await uploadFile(file, config);
+        console.log(location);
+      } catch (error) {
+        throw error;
+      }
+    });
+    // remove file from the drop zone
+    allFiles.forEach((f) => f.remove());
   };
 
-  return (
-    <input
-      type="file"
-      accept="image/*"
-      onChange={(e) => handleFileUpload(e.target.files[0])}
-    />
-  );
+  return <Dropzone onSubmit={handleSubmit} accept="image/*" />;
 }
 
-export default App;
+export default ImageUploader;
